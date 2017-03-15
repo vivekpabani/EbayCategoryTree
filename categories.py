@@ -31,6 +31,61 @@ def rebuild():
     datastore.disconnect()
 
 
+def render(cid):
+    """
+    Fetch the data for given category id from datastore.
+    If available, render an html script with the data tree.
+    If unavailable, print an error message.
+    """
+
+    # connect to database
+    datastore = DataStore()
+    datastore.connect()
+
+    # fetch record from database with given id
+    record = datastore.retrieve_by_cid(cid)
+
+    # check if table doesn't exist
+    if record == -1:
+        return
+
+    # if record doesn't exist in table, return
+    if not record:
+        print("No category with ID: {}".format(cid))
+        return
+
+    # if exists, fetch all children
+
+    records = fetch_all_children(datastore, record)
+
+    # connection close
+    datastore.disconnect()
+
+    # create an html file with name as cid
+    create_html_page(cid, records)
+
+
+def fetch_all_children(datastore, records):
+    """
+    Fetch all children of given records recursively to form a tree
+    """
+
+    answer = list()
+
+    # for each record in records, first insert it into answer.
+    # then fetch its children using its id as parentid
+    # if children found, extend answer by calling this function recursively on children
+
+    for record in records:
+        answer.append(record)
+        parent_id = record[0]
+        children = datastore.retrieve_by_parent_id(parent_id)
+        if children:
+            answer.append(fetch_all_children(datastore, children))
+
+    return answer
+
+
 def main():
     """
     Get argumentsm and call rebuild or render accordingly.
