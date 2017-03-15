@@ -36,3 +36,39 @@ class DataStore:
                                (cid integer, clevel integer, cname text, offer integer, parent_id integer)''')
 
         self.conn.commit()
+
+    def insert_all(self, rows):
+
+        self.connect()
+
+        self.cursor.executemany("INSERT INTO categories VALUES (?, ?, ?, ?, ?)", rows)
+
+        self.conn.commit()
+
+    def retrieve_by_cid(self, cid):
+
+        self.connect()
+
+        exists = self.conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='categories'")
+
+        if not exists.fetchone():
+            print("Table does not exist.")
+            return -1
+
+        rows = self.cursor.execute("SELECT * FROM categories WHERE cid = {}".format(cid))
+
+        return rows.fetchall()
+
+    def retrieve_by_parent_id(self, parent_id):
+
+        self.connect()
+
+        exists = self.conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='categories'")
+
+        if not exists.fetchone():
+            print("Table does not exist.")
+            return -1
+
+        rows = self.cursor.execute("SELECT * FROM categories WHERE parent_id = {} and cid != {}".format(parent_id, parent_id))
+
+        return rows.fetchall()
