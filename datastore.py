@@ -13,3 +13,17 @@ class DataStore:
         self.db = "ebay.db"
         self.conn = None
         self.cursor = None
+
+    def connect(self):
+        if not (self.conn and self.cursor):
+            try:
+                self.conn = lite.connect(self.db)
+                self.cursor = self.conn.cursor()
+            except:
+                print("Connection Error.")
+
+    def disconnect(self):
+        if self.conn:
+            self.conn.close()
+            self.conn = None
+            self.cursor = None
