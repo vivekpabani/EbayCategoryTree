@@ -27,3 +27,12 @@ class DataStore:
             self.conn.close()
             self.conn = None
             self.cursor = None
+
+    def create_table(self):
+
+        self.connect()
+
+        self.cursor.execute('''CREATE TABLE categories
+                               (cid integer, clevel integer, cname text, offer integer, parent_id integer)''')
+
+        self.conn.commit()
