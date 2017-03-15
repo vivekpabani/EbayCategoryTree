@@ -9,6 +9,7 @@ Fetch Ebay category data and provide storing and retrieving category tree functi
     * CategoryName
     * CategoryLevel
     * BestOfferEnabled
+    * ParentID
 3. Data from SQLite database is used to render category trees in HTML. 
 
 ### Instructions
