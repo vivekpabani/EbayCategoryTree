@@ -72,3 +72,11 @@ class DataStore:
         rows = self.cursor.execute("SELECT * FROM categories WHERE parent_id = {} and cid != {}".format(parent_id, parent_id))
 
         return rows.fetchall()
+
+    def drop_table(self):
+
+        self.connect()
+
+        self.cursor.execute("drop table if exists categories")
+
+        self.conn.commit()
